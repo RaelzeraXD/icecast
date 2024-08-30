@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  icecast:
+    build: .
+    image: icecast
+    container_name: icecast
+    ports:
+      - 8000:8000
+    volumes:
+    - ./icecast.xml:/etc/icecast2/icecast.xml
+    restart: always
+    networks:
+      - rede
+
+  nginx:
+    depends_on:
+      - icecast
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: always
+    networks:
+      - rede
+
+networks:
+  rede:
+    driver: bridge
